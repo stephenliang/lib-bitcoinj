@@ -1,0 +1,25 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '1.10'
+  distributionUrl = 'http://services.gradle.org/distributions/gradle-1.10-all.zip'
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile 'com.google.guava:guava:15.0'
+    compile 'commons-codec:commons-codec:1.8'
+    compile 'org.springframework:spring-context:4.0.0.RELEASE'
+    compile 'org.springframework:spring-beans:4.0.0.RELEASE'
+    testCompile 'junit:junit:4.11'
+
+    //protobuf files("libs/bitcoin.tar.gz")
+}

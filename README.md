@@ -1,2 +1,4 @@
-bitcoin-notifier
+lib-bitcoin
 ================
+
+Licensed under the LGPLv3
