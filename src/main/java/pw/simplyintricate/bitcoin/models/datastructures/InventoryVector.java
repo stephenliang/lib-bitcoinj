@@ -2,6 +2,7 @@ package pw.simplyintricate.bitcoin.models.datastructures;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
 
 import java.io.IOException;
@@ -33,5 +34,10 @@ public class InventoryVector {
         reader.read(hash, 0, hash.length);
 
         return new InventoryVector(UnsignedInteger.fromIntBits(type), hash);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

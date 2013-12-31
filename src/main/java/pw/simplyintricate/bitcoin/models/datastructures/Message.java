@@ -1,6 +1,7 @@
 package pw.simplyintricate.bitcoin.models.datastructures;
 
 import com.google.common.primitives.UnsignedInteger;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
 import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
 import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
@@ -75,5 +76,10 @@ public class Message {
         public Message build() {
             return message;
         }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -1,6 +1,7 @@
 package pw.simplyintricate.bitcoin.models.datastructures;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.IOException;
 
@@ -34,5 +35,10 @@ public class Inv {
 
     public InventoryVector[] getInventoryVector() {
         return inventoryVector;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

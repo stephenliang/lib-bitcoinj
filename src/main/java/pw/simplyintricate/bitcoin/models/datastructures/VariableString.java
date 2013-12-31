@@ -2,6 +2,7 @@ package pw.simplyintricate.bitcoin.models.datastructures;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
 
 import java.io.IOException;
@@ -45,5 +46,10 @@ public class VariableString {
         VariableString variableString = new VariableString(new String(stringBuffer));
 
         return variableString;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

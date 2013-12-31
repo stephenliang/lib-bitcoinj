@@ -23,6 +23,8 @@ import pw.simplyintricate.bitcoin.io.factory.CommandFactory;
 import pw.simplyintricate.bitcoin.io.handler.CommandHandler;
 import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
 import pw.simplyintricate.bitcoin.receiver.CryptoCoinConnectionException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -43,6 +45,8 @@ public class CommandReceiver implements Runnable {
     private final PushbackInputStream pushbackInputStream;
     private final CryptoCurrency coin;
     private final CommandFactory commandFactory;
+
+    private static final Logger LOG = LogManager.getLogger(CommandReceiver.class);
 
     /**
      * Creates a new command receiver
@@ -83,7 +87,7 @@ public class CommandReceiver implements Runnable {
         try {
             pushbackInputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error while closing the stream", e);
         }
     }
 
@@ -133,8 +137,7 @@ public class CommandReceiver implements Runnable {
         } catch(CryptoCoinConnectionException e) {
             throw new IOException(e);
         } catch(RuntimeException e) {
-            // keep on chuggin
-            e.printStackTrace();
+            LOG.error("Encountered an error while processing the command", e);
         }
     }
 }

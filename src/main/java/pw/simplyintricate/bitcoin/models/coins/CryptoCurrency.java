@@ -4,7 +4,9 @@ package pw.simplyintricate.bitcoin.models.coins;
  * Constants for all crypto currencies available out there
  */
 public enum CryptoCurrency {
-    BITCOIN(BitcoinConstants.ENCRYPTION_METHOD, BitcoinConstants.MAGIC_HEADER, BitcoinConstants.PROTOCOL_VERSION);
+    BITCOIN(BitcoinConstants.ENCRYPTION_METHOD, BitcoinConstants.MAGIC_HEADER, BitcoinConstants.PROTOCOL_VERSION),
+    LITECOIN(LitecoinConstants.ENCRYPTION_METHOD, LitecoinConstants.MAGIC_HEADER, LitecoinConstants.PROTOCOL_VERSION),
+    DOGECOIN(DogecoinConstants.ENCRYPTION_METHOD, DogecoinConstants.MAGIC_HEADER, DogecoinConstants.PROTOCOL_VERSION);
 
     private final String encryptionMethod;
     private final byte[] magicHeader;

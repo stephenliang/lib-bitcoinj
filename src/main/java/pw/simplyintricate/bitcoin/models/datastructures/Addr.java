@@ -1,6 +1,8 @@
 package pw.simplyintricate.bitcoin.models.datastructures;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
 
 import java.io.IOException;
@@ -47,5 +49,10 @@ public class Addr {
         }
 
         return new Addr(length, networkAddresses);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

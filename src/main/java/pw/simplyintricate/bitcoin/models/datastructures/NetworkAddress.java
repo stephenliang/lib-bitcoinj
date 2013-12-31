@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.EndianUtils;
 
 import java.io.IOException;
@@ -103,5 +104,10 @@ public class NetworkAddress {
         }
 
         return networkAddress;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
