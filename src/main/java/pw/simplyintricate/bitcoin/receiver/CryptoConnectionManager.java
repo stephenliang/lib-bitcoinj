@@ -1,5 +1,5 @@
 /*
- * lib-bitcoin
+ * lib-bitcoinj
  * Copyright (c) 2014, Stephen Liang, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
