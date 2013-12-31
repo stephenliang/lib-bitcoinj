@@ -92,7 +92,7 @@ public class NetworkAddress {
         reader.skip(12); // skip ipv6 support :(
         byte[] ipAddress = new byte[4];
         reader.read(ipAddress, 0, 4);
-        int port = reader.readUnsignedShort();
+        short port = EndianUtils.swapShort(((short) reader.readUnsignedShort()));
 
         NetworkAddress networkAddress;
         if (readTime) {

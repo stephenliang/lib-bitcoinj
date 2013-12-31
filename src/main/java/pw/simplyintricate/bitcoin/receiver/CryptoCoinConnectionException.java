@@ -1,12 +1,10 @@
 package pw.simplyintricate.bitcoin.receiver;
 
-import java.io.IOException;
-
 /**
- * Created by Stephen on 12/22/13.
+ * An exception while trying to connect or receive from a node
  */
 public class CryptoCoinConnectionException extends RuntimeException {
-    public CryptoCoinConnectionException(String message, IOException e) {
+    public CryptoCoinConnectionException(String message, Throwable e) {
         super(message, e);
     }
 }

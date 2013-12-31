@@ -19,8 +19,8 @@
 package pw.simplyintricate.bitcoin.io.receiver;
 
 import com.google.common.primitives.UnsignedInteger;
-import pw.simplyintricate.bitcoin.io.receiver.factory.CommandFactory;
-import pw.simplyintricate.bitcoin.io.receiver.handler.CommandHandler;
+import pw.simplyintricate.bitcoin.io.factory.CommandFactory;
+import pw.simplyintricate.bitcoin.io.handler.CommandHandler;
 import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
 import pw.simplyintricate.bitcoin.receiver.CryptoCoinConnectionException;
 
@@ -31,14 +31,25 @@ import java.io.PushbackInputStream;
 import java.net.Socket;
 import java.util.Arrays;
 
+/**
+ * Receives a command from the inpustream and processes it
+ */
 public class CommandReceiver implements Runnable {
     private static final int MAGIC_HEADER_SIZE = 4;
+    private static final int COMMAND_SIZE = 12;
+    private static final int CHECKSUM_SIZE = 4;
 
     private final InputStream connectionInputStream;
     private final PushbackInputStream pushbackInputStream;
     private final CryptoCurrency coin;
     private final CommandFactory commandFactory;
 
+    /**
+     * Creates a new command receiver
+     * @param connectionSocket The socket containing input and output information
+     * @param coin The crypto currency we are using
+     * @param commandFactory The command factory to help produce the handlers we need
+     */
     public CommandReceiver(Socket connectionSocket, CryptoCurrency coin, CommandFactory commandFactory) {
         try {
             this.connectionInputStream = connectionSocket.getInputStream();
@@ -51,45 +62,79 @@ public class CommandReceiver implements Runnable {
         this.commandFactory = commandFactory;
     }
 
+    /**
+     * Starts the thread up by reading from the socket's input stream
+     */
     @Override
     public void run() {
         try {
-            byte[] inputBuffer = new byte[4];
-            int read;
-            while ( (read = pushbackInputStream.read(inputBuffer, 0, 4)) != -1 ) {
-                pushbackInputStream.unread(inputBuffer);
-
-                if (Arrays.equals(coin.getMagicHeader(), inputBuffer)) {
-                    System.out.println("Found the magic header");
-                    try {
-                        processCommand(new DataInputStream(pushbackInputStream));
-                    } catch(RuntimeException e) {
-                        // keep on chuggin
-                        e.printStackTrace();
-                    }
-                }
-            }
-            System.out.println("done");
+            readFromInputStream();
         } catch(IOException e) {
             throw new CryptoCoinConnectionException("Failed to connect to remote endpoint!", e);
+        } finally {
+            closeStream();
         }
     }
 
-    private void processCommand(DataInputStream dataInputStream) throws IOException {
-        dataInputStream.skip(4); // skip the magic header we already read it
-        byte[] command = new byte[12];
-        dataInputStream.read(command, 0, 12);
-
-        int intLength = dataInputStream.readInt();
-        UnsignedInteger length = UnsignedInteger.fromIntBits(intLength);
-        byte[] checksum = new byte[4];
-        dataInputStream.read(checksum, 0, 4);
-
-        if (length.longValue() > Integer.MAX_VALUE) {
-            System.out.println("This value is too long");
+    /**
+     * Closes the input stream
+     */
+    private void closeStream() {
+        try {
+            pushbackInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        CommandHandler commandHandler = commandFactory.getCommandHandler(command);
-        commandHandler.processBytes(dataInputStream, coin);
+    /**
+     * Reads four bytes into the stream and determines if this is a valid cryptocurrency magic header
+     * @throws IOException If an IO Exception occurs
+     */
+    private void readFromInputStream() throws IOException {
+        byte[] inputBuffer = new byte[MAGIC_HEADER_SIZE];
+        int read;
+        while ( (read = pushbackInputStream.read(inputBuffer, 0, MAGIC_HEADER_SIZE)) != -1 ) {
+            processIncomingBytes(inputBuffer);
+        }
+    }
+
+    /**
+     * Checks if the buffer given matches the coin's magic header and processes the command if it does
+     * @param inputBuffer The buffer with the four bytes read
+     * @throws IOException If an IO Exception occurs
+     */
+    private void processIncomingBytes(byte[] inputBuffer) throws IOException {
+        pushbackInputStream.unread(inputBuffer);
+        
+        if (Arrays.equals(coin.getMagicHeader(), inputBuffer)) {
+                processCommand(new DataInputStream(pushbackInputStream));
+        }
+    }
+
+    /**
+     * Processes the command and passes it to the handler for furhter processing
+     * @param dataInputStream The input stream from the socket
+     * @throws IOException If an IO exception occurs
+     */
+    private void processCommand(DataInputStream dataInputStream) throws IOException {
+        try {
+            dataInputStream.skip(MAGIC_HEADER_SIZE); // skip the magic header we already read it
+            byte[] command = new byte[COMMAND_SIZE];
+            dataInputStream.read(command, 0, COMMAND_SIZE);
+
+            int intLength = dataInputStream.readInt();
+            UnsignedInteger length = UnsignedInteger.fromIntBits(intLength);
+            byte[] checksum = new byte[4];
+            dataInputStream.read(checksum, 0, CHECKSUM_SIZE);
+
+            CommandHandler commandHandler = commandFactory.getCommandHandler(command);
+            commandHandler.processBytes(dataInputStream, coin);
+        } catch(CryptoCoinConnectionException e) {
+            throw new IOException(e);
+        } catch(RuntimeException e) {
+            // keep on chuggin
+            e.printStackTrace();
+        }
     }
 }

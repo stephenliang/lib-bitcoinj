@@ -23,7 +23,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/**
+ * Utility class for random protocol methods
+ */
 public class CryptoUtil {
+    /**
+     * Creates a checksum based on the payload
+     * @param request The payload
+     * @param encryptionMethod The encryption method to use
+     * @return The first four bytes of the checksum
+     * @throws java.lang.IllegalArgumentException If the encryption method does not exist
+     */
     public static byte[] createChecksum(byte[] request, String encryptionMethod) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(encryptionMethod);
@@ -42,6 +52,10 @@ public class CryptoUtil {
         }
     }
 
+    /**
+     * Generates a random nonce
+     * @return The nonce
+     */
     public static byte[] generateNonce() {
         SecureRandom secureRandom = new SecureRandom();
         byte[] random = new byte[8];

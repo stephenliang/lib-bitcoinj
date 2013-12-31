@@ -1,7 +1,7 @@
 package pw.simplyintricate.bitcoin.models.coins;
 
 /**
- * Created by Stephen on 12/24/13.
+ * Constants for all crypto currencies available out there
  */
 public enum CryptoCurrency {
     BITCOIN(BitcoinConstants.ENCRYPTION_METHOD, BitcoinConstants.MAGIC_HEADER, BitcoinConstants.PROTOCOL_VERSION);

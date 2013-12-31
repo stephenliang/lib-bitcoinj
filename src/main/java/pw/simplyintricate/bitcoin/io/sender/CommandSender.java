@@ -25,22 +25,26 @@ import pw.simplyintricate.bitcoin.models.datastructures.Message;
 import pw.simplyintricate.bitcoin.receiver.CryptoCoinConnectionException;
 import pw.simplyintricate.bitcoin.util.CryptoUtil;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Singleton useful for sending commands out to the connected socket
+ */
 public class CommandSender {
     private Socket connectionSocket;
-    private final DataInputStream connectionInputStream;
     private final DataOutputStream connectionOutputStream;
     private final CryptoCurrency coin;
 
+    /**
+     * Creates a new Command sender
+     * @param socket The data socket to the node
+     * @param coin The crypto currency
+     */
     public CommandSender(Socket socket, CryptoCurrency coin) {
         try {
             connectionSocket = socket;
-
-            connectionInputStream = new DataInputStream(connectionSocket.getInputStream());
             connectionOutputStream = new DataOutputStream(connectionSocket.getOutputStream());
             this.coin = coin;
         } catch (IOException e) {
@@ -48,6 +52,11 @@ public class CommandSender {
         }
     }
 
+    /**
+     * Writes the given command and payload to the node
+     * @param request The payload as a byte array
+     * @param command The command to write out
+     */
      public void writeCommand(byte[] request, Command command) {
         byte[] checksum = CryptoUtil.createChecksum(request, coin.getEncryptionMethod());
 
@@ -62,13 +71,7 @@ public class CommandSender {
         try {
             byte[] commandArray = message.toByteArray();
 
-            StringBuilder sb = new StringBuilder();
-            for (byte b : commandArray) {
-                sb.append(String.format("%02X ", b));
-            }
-
-            System.out.println(sb.toString());
-            connectionOutputStream.write(commandArray); //56 = start of ip addr
+            connectionOutputStream.write(commandArray);
         } catch (IOException e) {
             throw new SenderException("Error while sending message to remote endpoint", e);
         }
