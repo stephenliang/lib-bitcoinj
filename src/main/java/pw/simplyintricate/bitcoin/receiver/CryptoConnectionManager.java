@@ -75,22 +75,16 @@ public class CryptoConnectionManager implements Runnable {
     public void run() {
         try {
             initiateConnection();
+            sendVersionCommand();
 
             // Put the command receiver on a separate thread so that we can receive while we send and send while
             // we receive
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.submit(commandReceiver);
-
-            sendVersionCommand();
-
-            // Hang the thread so we don't orphan the receiver thread
-            executorService.shutdown();
-            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-        } catch (InterruptedException e) {
-            throw new CryptoCoinConnectionException("Thread interrupted!", e);
+            commandReceiver.run();
         } catch (IOException e) {
+            closeConnection();
             throw new CryptoCoinConnectionException("Failed to connect to remote host!", e);
-        } finally {
+        } catch (RuntimeException e) {
+            e.printStackTrace();
             closeConnection();
         }
     }
