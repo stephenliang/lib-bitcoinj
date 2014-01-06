@@ -32,6 +32,7 @@ import pw.simplyintricate.bitcoin.util.CryptoUtil;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  * Crypto currency connection manager. Establishes a connection to a node and then instantiates the appropriate
  * sender and receiver threads
  */
-public class CryptoConnectionManager implements Runnable {
+public class CryptoConnectionManager implements Callable<Void> {
     private static final String BROADCAST_ADDRESS = "0.0.0.0";
     private static final int BROADCAST_PORT = 0;
     private final CommandFactory commandFactory;
@@ -69,10 +70,11 @@ public class CryptoConnectionManager implements Runnable {
         connectionSocket = new Socket(remoteIpAddress, remotePort);
         commandSender = new CommandSender(connectionSocket, coin);
         commandReceiver = new CommandReceiver(connectionSocket, coin, commandFactory);
+        connectionSocket.setSoTimeout(20000);
     }
 
     @Override
-    public void run() {
+    public Void call() {
         try {
             initiateConnection();
             sendVersionCommand();
@@ -87,12 +89,18 @@ public class CryptoConnectionManager implements Runnable {
             e.printStackTrace();
             closeConnection();
         }
+
+        return null;
     }
 
     /**
      * Closes the socket
      */
-    private void closeConnection() {
+    public void closeConnection() {
+        if (connectionSocket == null) {
+            return;
+        }
+
         try {
             connectionSocket.close();
         } catch (IOException e) {

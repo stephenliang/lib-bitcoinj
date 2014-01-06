@@ -65,6 +65,6 @@ public class VariableString {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return new String(string).trim();
     }
 }

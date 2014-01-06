@@ -45,6 +45,7 @@ public class CommandReceiver implements Runnable {
     private final PushbackInputStream pushbackInputStream;
     private final CryptoCurrency coin;
     private final CommandFactory commandFactory;
+    private final Socket connectionSocket;
 
     private static final Logger LOG = LogManager.getLogger(CommandReceiver.class);
 
@@ -64,6 +65,7 @@ public class CommandReceiver implements Runnable {
         pushbackInputStream = new PushbackInputStream(connectionInputStream, MAGIC_HEADER_SIZE);
         this.coin = coin;
         this.commandFactory = commandFactory;
+        this.connectionSocket = connectionSocket;
     }
 
     /**
@@ -133,7 +135,7 @@ public class CommandReceiver implements Runnable {
             dataInputStream.read(checksum, 0, CHECKSUM_SIZE);
 
             CommandHandler commandHandler = commandFactory.getCommandHandler(command);
-            commandHandler.processBytes(dataInputStream, coin);
+            commandHandler.processBytes(connectionSocket, coin);
         } catch(CryptoCoinConnectionException e) {
             throw new IOException(e);
         } catch(RuntimeException e) {

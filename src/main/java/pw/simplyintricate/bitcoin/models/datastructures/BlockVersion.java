@@ -85,6 +85,38 @@ public final class BlockVersion {
         return blockVersion;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public UnsignedInteger getServices() {
+        return services;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public NetworkAddress getReceivingNodeNetworkAddress() {
+        return receivingNodeNetworkAddress;
+    }
+
+    public NetworkAddress getEmittingNodeNetworkAddress() {
+        return emittingNodeNetworkAddress;
+    }
+
+    public byte[] getNonce() {
+        return nonce;
+    }
+
+    public VariableString getUserAgent() {
+        return userAgent;
+    }
+
+    public int getStartingHeight() {
+        return startingHeight;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
