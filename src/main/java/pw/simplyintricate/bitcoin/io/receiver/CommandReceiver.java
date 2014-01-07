@@ -19,6 +19,7 @@
 package pw.simplyintricate.bitcoin.io.receiver;
 
 import com.google.common.primitives.UnsignedInteger;
+import org.apache.commons.codec.binary.Hex;
 import pw.simplyintricate.bitcoin.io.factory.CommandFactory;
 import pw.simplyintricate.bitcoin.io.handler.CommandHandler;
 import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
@@ -115,6 +116,14 @@ public class CommandReceiver implements Runnable {
         
         if (Arrays.equals(coin.getMagicHeader(), inputBuffer)) {
                 processCommand(new DataInputStream(pushbackInputStream));
+        } else {
+            LOG.error("The buffer contains %s which does not match the magic header of %s!",
+                    Hex.encodeHex(inputBuffer), Hex.encodeHex(coin.getMagicHeader()));
+
+            byte[] currentInput = new byte[1];
+            while (currentInput[0] != coin.getMagicHeader()[0]) {
+                pushbackInputStream.read(currentInput, 0, 1);
+            }
         }
     }
 
