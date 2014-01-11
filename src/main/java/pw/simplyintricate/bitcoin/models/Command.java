@@ -26,7 +26,8 @@ public enum Command {
     verack("verack"),
     inv("inv"),
     addr("addr"),
-    getdata("getdata");
+    getdata("getdata"),
+    getaddr("getaddr");
 
     private final String protocolCommandString;
 

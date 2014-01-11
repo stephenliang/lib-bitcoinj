@@ -56,6 +56,7 @@ public class Addr {
 
     public static Addr fromInputStream(LittleEndianDataInputStream reader) throws IOException {
         VariableInteger length = VariableInteger.fromInputStream(reader);
+
         int intLength = length.getValue().intValue();
         NetworkAddress[] networkAddresses = new NetworkAddress[intLength];
 

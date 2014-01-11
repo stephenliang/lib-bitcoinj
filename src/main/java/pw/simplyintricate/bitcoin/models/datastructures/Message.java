@@ -36,10 +36,6 @@ public class Message {
     private Message() {}
 
     public byte[] toByteArray() {
-        if (payload.length == 0) {
-            throw new IllegalStateException("The payload is empty, did you forget to initialize the message?");
-        }
-
         HybridByteArrayDataOutput writer = new HybridByteArrayDataOutput();
 
         writer.write(cryptoCurrency.getMagicHeader());

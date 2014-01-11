@@ -57,4 +57,8 @@ public class PrimitiveUtil {
 
         return sb.toString();
     }
+
+    public static int signedByteToUnsignedByte(byte signedByte) {
+        return (signedByte & 0xFF);
+    }
 }

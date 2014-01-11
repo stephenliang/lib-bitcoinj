@@ -22,6 +22,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
+import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
 
 import java.io.IOException;
 
@@ -57,7 +58,7 @@ public class VariableInteger {
     }
 
     public static VariableInteger fromInputStream(LittleEndianDataInputStream reader) throws IOException {
-        byte determiningSize = reader.readByte();
+        int determiningSize = PrimitiveUtil.signedByteToUnsignedByte(reader.readByte());
         UnsignedInteger value;
         if (determiningSize < 0xfd) {
             value = UnsignedInteger.fromIntBits(determiningSize);
@@ -72,9 +73,7 @@ public class VariableInteger {
             value = UnsignedInteger.valueOf(followUpValue);
         }
 
-        VariableInteger variableInteger = new VariableInteger(value);
-
-        return variableInteger;
+        return new VariableInteger(value);
     }
 
     @Override

@@ -78,6 +78,7 @@ public class CryptoConnectionManager implements Callable<Void> {
         try {
             initiateConnection();
             sendVersionCommand();
+            commandSender.writeCommand(new byte[0], Command.getaddr);
 
             // Put the command receiver on a separate thread so that we can receive while we send and send while
             // we receive

@@ -113,16 +113,48 @@ public class CommandReceiver implements Runnable {
      */
     private void processIncomingBytes(byte[] inputBuffer) throws IOException {
         pushbackInputStream.unread(inputBuffer);
+        DataInputStream dataInputStream = new DataInputStream(pushbackInputStream);
         
         if (Arrays.equals(coin.getMagicHeader(), inputBuffer)) {
-                processCommand(new DataInputStream(pushbackInputStream));
+                processCommand(dataInputStream);
         } else {
-            LOG.error("The buffer contains %s which does not match the magic header of %s!",
+            LOG.error("The buffer contains {} which does not match the magic header of {}!",
                     Hex.encodeHex(inputBuffer), Hex.encodeHex(coin.getMagicHeader()));
 
-            byte[] currentInput = new byte[1];
-            while (currentInput[0] != coin.getMagicHeader()[0]) {
-                pushbackInputStream.read(currentInput, 0, 1);
+            pushbackInputStream.skip(MAGIC_HEADER_SIZE);
+            while (true) {
+                byte byteRead = dataInputStream.readByte();
+                byte[] magicHeader = coin.getMagicHeader();
+
+                if (byteRead != magicHeader[0]) {
+                    continue;
+                }
+
+                byteRead = dataInputStream.readByte();
+
+                if (byteRead != magicHeader[1]) {
+                    continue;
+                }
+
+                byteRead = dataInputStream.readByte();
+
+                if (byteRead != magicHeader[2]) {
+                    continue;
+                }
+
+                byteRead = dataInputStream.readByte();
+
+                if (byteRead != magicHeader[3]) {
+                    continue;
+                }
+
+                byteRead = dataInputStream.readByte();
+
+                if (byteRead != magicHeader[4]) {
+                    continue;
+                }
+                pushbackInputStream.unread(coin.getMagicHeader());
+                break;
             }
         }
     }
