@@ -1,36 +1,35 @@
-/*
+package pw.simplyintricate.bitcoin.models.datastructures;
+
+/**
  * lib-bitcoinj
  * Copyright (c) 2014, Stephen Liang, All rights reserved.
- *
+ * <p/>
  * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public
+ * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 3.0 of the License, or (at your option) any later version.
- *
+ * <p/>
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public
+ * <p/>
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-
-package pw.simplyintricate.bitcoin.models.datastructures;
-
 import com.google.common.io.LittleEndianDataInputStream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
 
 import java.io.IOException;
 
-public class Inv {
+public class NotFound {
     private final VariableInteger length;
-    private final InventoryVector[] inventoryVector;
+    private final InventoryVector[] inventoryVectors;
 
-    public Inv(VariableInteger length, InventoryVector[] inventoryVector) {
+    public NotFound(VariableInteger length, InventoryVector[] inventoryVectors) {
         this.length = length;
-        this.inventoryVector = inventoryVector;
+        this.inventoryVectors = inventoryVectors;
     }
 
     public byte[] toByteArray() {
@@ -40,30 +39,22 @@ public class Inv {
         writer.write(length.toByteArray());
 
         for (int i = 0; i < intLength; i++) {
-            writer.write(inventoryVector[i].toByteArray());
+            writer.write(inventoryVectors[i].toByteArray());
         }
 
         return writer.toByteArray();
     }
 
-    public static Inv fromInputStream(LittleEndianDataInputStream reader) throws IOException {
-        VariableInteger length = VariableInteger.fromInputStream(reader);
+    public static GetData fromInputStream(LittleEndianDataInputStream inputStream) throws IOException {
+        VariableInteger length = VariableInteger.fromInputStream(inputStream);
         int intLength = length.getValue().intValue();
         InventoryVector[] inventoryVectors = new InventoryVector[intLength];
 
-        for (int i = 0; i < intLength; i++) {
-            inventoryVectors[i] = InventoryVector.fromInputStream(reader);
+        for (int i=0; i< intLength; i++) {
+            inventoryVectors[i] = InventoryVector.fromInputStream(inputStream);
         }
 
-        return new Inv(length, inventoryVectors);
-    }
-
-    public VariableInteger getLength() {
-        return length;
-    }
-
-    public InventoryVector[] getInventoryVector() {
-        return inventoryVector;
+        return new GetData(length, inventoryVectors);
     }
 
     @Override
