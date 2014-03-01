@@ -22,12 +22,18 @@ package pw.simplyintricate.bitcoin.models;
  * Command enums useful for determining how to interact with the protocol
  */
 public enum Command {
-    version("version"),
-    verack("verack"),
-    inv("inv"),
     addr("addr"),
+    block("block"),
+    getaddr("getaddr"),
+    getblocks("getblocks"),
     getdata("getdata"),
-    getaddr("getaddr");
+    inv("inv"),
+    notfound("notfound"),
+    ping("ping"),
+    pong("pong"),
+    tx("tx"),
+    version("version"),
+    verack("verack");
 
     private final String protocolCommandString;
 
