@@ -154,11 +154,6 @@ public class CommandReceiver implements Runnable {
                     continue;
                 }
 
-                byteRead = dataInputStream.readByte();
-
-                if (byteRead != magicHeader[4]) {
-                    continue;
-                }
                 pushbackInputStream.unread(coin.getMagicHeader());
                 break;
             }
