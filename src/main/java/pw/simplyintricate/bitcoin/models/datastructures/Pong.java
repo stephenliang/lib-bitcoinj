@@ -1,7 +1,6 @@
 package pw.simplyintricate.bitcoin.models.datastructures;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.google.common.primitives.UnsignedInteger;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
 
 import java.io.IOException;
@@ -24,27 +23,27 @@ import java.io.IOException;
  * License along with this library.
  */
 public class Pong {
-    private UnsignedInteger nonce;
+    private long nonce;
 
-    public Pong(UnsignedInteger nonce) {
+    public Pong(long nonce) {
         this.nonce = nonce;
     }
 
     public byte[] toByteArray() {
         HybridByteArrayDataOutput writer = new HybridByteArrayDataOutput();
 
-        writer.writeInt(nonce.intValue());
+        writer.writeLong(nonce);
 
         return writer.toByteArray();
     }
 
     public static Pong fromInputStream(LittleEndianDataInputStream reader) throws IOException {
-        UnsignedInteger nonce = UnsignedInteger.fromIntBits(reader.readInt());
+        long nonce = reader.readLong();
 
         return new Pong(nonce);
     }
 
-    public UnsignedInteger getNonce() {
+    public long getNonce() {
         return nonce;
     }
 }
