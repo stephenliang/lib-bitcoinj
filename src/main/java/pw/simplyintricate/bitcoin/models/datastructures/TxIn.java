@@ -59,6 +59,22 @@ public class TxIn {
         return new TxIn(outPoint, scriptLength, signatureScript, UnsignedInteger.fromIntBits(sequence));
     }
 
+    public OutPoint getOutPoint() {
+        return outPoint;
+    }
+
+    public VariableInteger getScriptLength() {
+        return scriptLength;
+    }
+
+    public byte[] getSignatureScript() {
+        return signatureScript;
+    }
+
+    public UnsignedInteger getSequence() {
+        return sequence;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

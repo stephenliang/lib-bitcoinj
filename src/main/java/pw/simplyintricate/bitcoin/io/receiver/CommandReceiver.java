@@ -20,12 +20,13 @@ package pw.simplyintricate.bitcoin.io.receiver;
 
 import com.google.common.primitives.UnsignedInteger;
 import org.apache.commons.codec.binary.Hex;
-import pw.simplyintricate.bitcoin.io.factory.CommandFactory;
-import pw.simplyintricate.bitcoin.io.handler.CommandHandler;
-import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
-import pw.simplyintricate.bitcoin.receiver.CryptoCoinConnectionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pw.simplyintricate.bitcoin.io.factory.CommandFactory;
+import pw.simplyintricate.bitcoin.io.handler.CommandHandler;
+import pw.simplyintricate.bitcoin.io.sender.CommandSender;
+import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
+import pw.simplyintricate.bitcoin.receiver.CryptoCoinConnectionException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class CommandReceiver implements Runnable {
     private final CryptoCurrency coin;
     private final CommandFactory commandFactory;
     private final Socket connectionSocket;
+    private final CommandSender commandSender;
 
     private static final Logger LOG = LogManager.getLogger(CommandReceiver.class);
 
@@ -56,7 +58,10 @@ public class CommandReceiver implements Runnable {
      * @param coin The crypto currency we are using
      * @param commandFactory The command factory to help produce the handlers we need
      */
-    public CommandReceiver(Socket connectionSocket, CryptoCurrency coin, CommandFactory commandFactory) {
+    public CommandReceiver(Socket connectionSocket,
+                           CryptoCurrency coin,
+                           CommandFactory commandFactory,
+                           CommandSender commandSender) {
         try {
             this.connectionInputStream = connectionSocket.getInputStream();
         } catch(IOException e) {
@@ -67,6 +72,7 @@ public class CommandReceiver implements Runnable {
         this.coin = coin;
         this.commandFactory = commandFactory;
         this.connectionSocket = connectionSocket;
+        this.commandSender = commandSender;
     }
 
     /**
@@ -176,7 +182,7 @@ public class CommandReceiver implements Runnable {
             dataInputStream.read(checksum, 0, CHECKSUM_SIZE);
 
             CommandHandler commandHandler = commandFactory.getCommandHandler(command);
-            commandHandler.processBytes(connectionSocket, coin);
+            commandHandler.processBytes(connectionSocket, coin, commandSender);
         } catch(CryptoCoinConnectionException e) {
             throw new IOException(e);
         } catch(RuntimeException e) {

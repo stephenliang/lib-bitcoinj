@@ -55,6 +55,18 @@ public class TxOut {
         return new TxOut(value, pkScriptLength, pkScript);
     }
 
+    public long getValue() {
+        return value;
+    }
+
+    public VariableInteger getPkScriptLength() {
+        return pkScriptLength;
+    }
+
+    public byte[] getPkScript() {
+        return pkScript;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

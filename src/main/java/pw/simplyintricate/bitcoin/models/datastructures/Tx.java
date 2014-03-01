@@ -92,6 +92,30 @@ public class Tx {
         return new Tx(version, txInCount, txIns, txOutCount, txOuts, lockTime);
     }
 
+    public UnsignedInteger getVersion() {
+        return version;
+    }
+
+    public VariableInteger getTransactionInCount() {
+        return transactionInCount;
+    }
+
+    public TxIn[] getTxIns() {
+        return txIns;
+    }
+
+    public VariableInteger getTransactionOutCount() {
+        return transactionOutCount;
+    }
+
+    public TxOut[] getTxOuts() {
+        return txOuts;
+    }
+
+    public UnsignedInteger getLockTime() {
+        return lockTime;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

@@ -30,7 +30,7 @@ public class OutPoint {
     private UnsignedInteger index;
 
     public OutPoint(byte[] hash, UnsignedInteger index) {
-        Validate.isTrue(hash.length != 32);
+        Validate.isTrue(hash.length == 32);
 
         this.hash = hash;
         this.index = index;
@@ -51,6 +51,14 @@ public class OutPoint {
         int index = reader.readInt();
 
         return new OutPoint(hash, UnsignedInteger.fromIntBits(index));
+    }
+
+    public byte[] getHash() {
+        return hash;
+    }
+
+    public UnsignedInteger getIndex() {
+        return index;
     }
 
     @Override

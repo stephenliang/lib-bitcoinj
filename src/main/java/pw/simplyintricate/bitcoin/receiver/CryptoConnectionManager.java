@@ -19,6 +19,8 @@
 package pw.simplyintricate.bitcoin.receiver;
 
 import com.google.common.primitives.UnsignedInteger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pw.simplyintricate.bitcoin.io.factory.CommandFactory;
 import pw.simplyintricate.bitcoin.io.receiver.CommandReceiver;
 import pw.simplyintricate.bitcoin.io.sender.CommandSender;
@@ -33,9 +35,6 @@ import pw.simplyintricate.bitcoin.util.CryptoUtil;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Crypto currency connection manager. Establishes a connection to a node and then instantiates the appropriate
@@ -51,6 +50,8 @@ public class CryptoConnectionManager implements Callable<Void> {
     private final int remotePort;
     private CommandSender commandSender;
     private CommandReceiver commandReceiver;
+
+    private static final Logger LOGGER = LogManager.getLogger(CommandReceiver.class);
 
     /**
      * Constructs a connection manager
@@ -69,7 +70,7 @@ public class CryptoConnectionManager implements Callable<Void> {
     private void initiateConnection() throws IOException {
         connectionSocket = new Socket(remoteIpAddress, remotePort);
         commandSender = new CommandSender(connectionSocket, coin);
-        commandReceiver = new CommandReceiver(connectionSocket, coin, commandFactory);
+        commandReceiver = new CommandReceiver(connectionSocket, coin, commandFactory, commandSender);
         connectionSocket.setSoTimeout(20000);
     }
 
@@ -86,6 +87,8 @@ public class CryptoConnectionManager implements Callable<Void> {
         } catch (IOException e) {
             closeConnection();
             throw new CryptoCoinConnectionException("Failed to connect to remote host!", e);
+        } catch(CryptoCoinConnectionException e) {
+            LOGGER.error("Failed to connect to %s", connectionSocket.getInetAddress().getHostAddress());
         } catch (RuntimeException e) {
             e.printStackTrace();
             closeConnection();

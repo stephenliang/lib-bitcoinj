@@ -18,14 +18,14 @@
 
 package pw.simplyintricate.bitcoin.io.handler;
 
+import pw.simplyintricate.bitcoin.io.sender.CommandSender;
 import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
 
-import java.io.DataInputStream;
 import java.net.Socket;
 
 /**
  * Processes the given input stream and crypto coin
  */
 public interface CommandHandler {
-    public void processBytes(Socket socket, CryptoCurrency coin);
+    public void processBytes(Socket socket, CryptoCurrency coin, CommandSender commandSender);
 }
