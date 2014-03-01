@@ -43,4 +43,8 @@ public class Ping {
 
         return new Ping(nonce);
     }
+
+    public UnsignedInteger getNonce() {
+        return nonce;
+    }
 }

@@ -19,8 +19,6 @@
 package pw.simplyintricate.bitcoin.util;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class PrimitiveUtil {
     private static final int COMMAND_LENGTH = 12;
@@ -65,14 +63,10 @@ public class PrimitiveUtil {
     }
 
     public static String byteArrayToString(byte[] byteArray) {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(byteArray);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byte[] reverseByte = byteBuffer.array();
-
         StringBuilder sb = new StringBuilder("");
 
-        for (byte b : reverseByte) {
-            sb.append(String.format("%02X", b));
+        for (byte b : byteArray) {
+            sb.append(String.format("%02x", b));
         }
 
         return sb.toString();

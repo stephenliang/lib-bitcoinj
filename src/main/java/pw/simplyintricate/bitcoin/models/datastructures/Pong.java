@@ -43,4 +43,8 @@ public class Pong {
 
         return new Pong(nonce);
     }
+
+    public UnsignedInteger getNonce() {
+        return nonce;
+    }
 }
