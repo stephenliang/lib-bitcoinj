@@ -75,7 +75,8 @@ public class PrimitiveUtil {
     }
 
     public static byte[] reverseArray(byte[] bytes) {
-        ArrayUtils.reverse(bytes);
-        return bytes;
+        byte[] buffer = ArrayUtils.clone(bytes);
+        ArrayUtils.reverse(buffer);
+        return buffer;
     }
 }
