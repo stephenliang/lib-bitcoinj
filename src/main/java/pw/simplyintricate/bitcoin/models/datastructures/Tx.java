@@ -4,6 +4,9 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
+import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
+import pw.simplyintricate.bitcoin.util.CryptoUtil;
+import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
 
 import java.io.IOException;
 
@@ -114,6 +117,12 @@ public class Tx {
 
     public UnsignedInteger getLockTime() {
         return lockTime;
+    }
+
+    public String getHash(CryptoCurrency coin) {
+        byte[] doubleHashedResult = CryptoUtil.doubleHash(toByteArray(), coin.getEncryptionMethod());
+
+        return PrimitiveUtil.byteArrayToString(doubleHashedResult);
     }
 
     @Override
