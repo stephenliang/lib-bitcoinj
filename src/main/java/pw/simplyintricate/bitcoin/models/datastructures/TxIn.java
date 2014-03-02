@@ -43,7 +43,7 @@ public class TxIn {
 
         writer.write(outPoint.toByteArray());
         writer.write(scriptLength.toByteArray());
-        writer.write(signatureScript);
+        writer.write(PrimitiveUtil.reverseArray(signatureScript));
         writer.write(sequence.intValue());
 
         return writer.toByteArray();

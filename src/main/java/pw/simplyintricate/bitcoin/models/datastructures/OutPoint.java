@@ -40,7 +40,7 @@ public class OutPoint {
     public byte[] toByteArray() {
         HybridByteArrayDataOutput writer = new HybridByteArrayDataOutput();
 
-        writer.write(hash);
+        writer.write(PrimitiveUtil.reverseArray(hash));
         writer.write(index.intValue());
 
         return writer.toByteArray();
