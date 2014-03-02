@@ -74,6 +74,8 @@ public class Block {
         UnsignedInteger version = UnsignedInteger.fromIntBits(reader.readInt());
         byte[] previousBlock = new byte[32];
         byte[] merkleRoot = new byte[32];
+        reader.read(previousBlock, 0, 32);
+        reader.read(merkleRoot, 0, 32);
         UnsignedInteger timestamp = UnsignedInteger.fromIntBits(reader.readInt());
         UnsignedInteger difficultyTarget = UnsignedInteger.fromIntBits(reader.readInt());
         UnsignedInteger nonce = UnsignedInteger.fromIntBits(reader.readInt());
