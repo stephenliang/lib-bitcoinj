@@ -28,14 +28,14 @@ import java.io.IOException;
  * License along with this library.
  */
 public class Block {
-    private UnsignedInteger version;
-    private byte[] previousBlock;
-    private byte[] merkleRoot;
-    private UnsignedInteger timestamp;
-    private UnsignedInteger difficultyTarget;
-    private UnsignedInteger nonce;
-    private VariableInteger transactionCount;
-    private Tx[] transactions;
+    private final UnsignedInteger version;
+    private final byte[] previousBlock;
+    private final byte[] merkleRoot;
+    private final UnsignedInteger timestamp;
+    private final UnsignedInteger difficultyTarget;
+    private final UnsignedInteger nonce;
+    private final VariableInteger transactionCount;
+    private final Tx[] transactions;
 
     public Block(UnsignedInteger version,
                  byte[] previousBlock,
@@ -74,8 +74,6 @@ public class Block {
         byte[] merkleRoot = new byte[32];
         reader.read(previousBlock, 0, 32);
         reader.read(merkleRoot, 0, 32);
-        previousBlock = PrimitiveUtil.reverseArray(previousBlock);
-        merkleRoot = PrimitiveUtil.reverseArray(merkleRoot);
 
         UnsignedInteger timestamp = UnsignedInteger.fromIntBits(reader.readInt());
         UnsignedInteger difficultyTarget = UnsignedInteger.fromIntBits(reader.readInt());
@@ -96,11 +94,11 @@ public class Block {
     }
 
     public byte[] getPreviousBlock() {
-        return previousBlock;
+        return PrimitiveUtil.reverseArray(previousBlock);
     }
 
     public byte[] getMerkleRoot() {
-        return merkleRoot;
+        return PrimitiveUtil.reverseArray(merkleRoot);
     }
 
     public UnsignedInteger getTimestamp() {
@@ -136,8 +134,6 @@ public class Block {
 
     private void writeBlockHeader(HybridByteArrayDataOutput writer) {
         writer.writeInt(version.intValue());
-        writer.write(PrimitiveUtil.reverseArray(previousBlock));
-        writer.write(PrimitiveUtil.reverseArray(merkleRoot));
         writer.writeInt(timestamp.intValue());
         writer.writeInt(difficultyTarget.intValue());
         writer.writeInt(nonce.intValue());

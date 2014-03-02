@@ -52,7 +52,6 @@ public class TxOut {
         byte[] pkScript = new byte[pkScriptLengthInt];
 
         reader.read(pkScript, 0, pkScriptLengthInt);
-        pkScript = PrimitiveUtil.reverseArray(pkScript);
 
         return new TxOut(value, pkScriptLength, pkScript);
     }
@@ -66,7 +65,7 @@ public class TxOut {
     }
 
     public byte[] getPkScript() {
-        return pkScript;
+        return PrimitiveUtil.reverseArray(pkScript);
     }
 
     @Override
