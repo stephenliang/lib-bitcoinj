@@ -74,7 +74,7 @@ public class PrimitiveUtil {
         return sb.toString();
     }
 
-    public static byte[] bigEndianToLittleEndian(byte[] bytes) {
+    public static byte[] reverseArray(byte[] bytes) {
         ArrayUtils.reverse(bytes);
         return bytes;
     }

@@ -40,7 +40,7 @@ public class TxOut {
 
         writer.writeLong(value);
         writer.write(pkScriptLength.toByteArray());
-        writer.write(pkScript);
+        writer.write(PrimitiveUtil.reverseArray(pkScript));
 
         return writer.toByteArray();
     }
@@ -52,7 +52,7 @@ public class TxOut {
         byte[] pkScript = new byte[pkScriptLengthInt];
 
         reader.read(pkScript, 0, pkScriptLengthInt);
-        pkScript = PrimitiveUtil.bigEndianToLittleEndian(pkScript);
+        pkScript = PrimitiveUtil.reverseArray(pkScript);
 
         return new TxOut(value, pkScriptLength, pkScript);
     }

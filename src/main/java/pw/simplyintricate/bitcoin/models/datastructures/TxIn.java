@@ -43,7 +43,7 @@ public class TxIn {
 
         writer.write(outPoint.toByteArray());
         writer.write(scriptLength.toByteArray());
-        writer.write(signatureScript);
+        writer.write(PrimitiveUtil.reverseArray(signatureScript));
         writer.write(sequence.intValue());
 
         return writer.toByteArray();
@@ -55,7 +55,7 @@ public class TxIn {
         int scriptLengthInt = scriptLength.getValue().intValue();
         byte[] signatureScript = new byte[scriptLengthInt];
         reader.read(signatureScript, 0, scriptLengthInt);
-        signatureScript = PrimitiveUtil.bigEndianToLittleEndian(signatureScript);
+        signatureScript = PrimitiveUtil.reverseArray(signatureScript);
         int sequence = reader.readInt();
 
         return new TxIn(outPoint, scriptLength, signatureScript, UnsignedInteger.fromIntBits(sequence));

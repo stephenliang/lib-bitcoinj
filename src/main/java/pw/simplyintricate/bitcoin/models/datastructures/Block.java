@@ -74,8 +74,8 @@ public class Block {
         byte[] merkleRoot = new byte[32];
         reader.read(previousBlock, 0, 32);
         reader.read(merkleRoot, 0, 32);
-        previousBlock = PrimitiveUtil.bigEndianToLittleEndian(previousBlock);
-        merkleRoot = PrimitiveUtil.bigEndianToLittleEndian(merkleRoot);
+        previousBlock = PrimitiveUtil.reverseArray(previousBlock);
+        merkleRoot = PrimitiveUtil.reverseArray(merkleRoot);
 
         UnsignedInteger timestamp = UnsignedInteger.fromIntBits(reader.readInt());
         UnsignedInteger difficultyTarget = UnsignedInteger.fromIntBits(reader.readInt());
@@ -136,8 +136,8 @@ public class Block {
 
     private void writeBlockHeader(HybridByteArrayDataOutput writer) {
         writer.writeInt(version.intValue());
-        writer.write(previousBlock);
-        writer.write(merkleRoot);
+        writer.write(PrimitiveUtil.reverseArray(previousBlock));
+        writer.write(PrimitiveUtil.reverseArray(merkleRoot));
         writer.writeInt(timestamp.intValue());
         writer.writeInt(difficultyTarget.intValue());
         writer.writeInt(nonce.intValue());

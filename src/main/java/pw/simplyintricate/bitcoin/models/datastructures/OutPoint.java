@@ -40,7 +40,7 @@ public class OutPoint {
     public byte[] toByteArray() {
         HybridByteArrayDataOutput writer = new HybridByteArrayDataOutput();
 
-        writer.write(hash);
+        writer.write(PrimitiveUtil.reverseArray(hash));
         writer.write(index.intValue());
 
         return writer.toByteArray();
@@ -49,7 +49,7 @@ public class OutPoint {
     public static OutPoint fromInputStream(LittleEndianDataInputStream reader) throws IOException {
         byte[] hash = new byte[32];
         reader.read(hash, 0, 32);
-        hash = PrimitiveUtil.bigEndianToLittleEndian(hash);
+        hash = PrimitiveUtil.reverseArray(hash);
         int index = reader.readInt();
 
         return new OutPoint(hash, UnsignedInteger.fromIntBits(index));
