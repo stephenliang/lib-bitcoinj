@@ -5,6 +5,7 @@ import com.google.common.primitives.UnsignedInteger;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
+import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
 
 import java.io.IOException;
 
@@ -48,6 +49,7 @@ public class OutPoint {
     public static OutPoint fromInputStream(LittleEndianDataInputStream reader) throws IOException {
         byte[] hash = new byte[32];
         reader.read(hash, 0, 32);
+        hash = PrimitiveUtil.bigEndianToLittleEndian(hash);
         int index = reader.readInt();
 
         return new OutPoint(hash, UnsignedInteger.fromIntBits(index));

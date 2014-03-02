@@ -3,6 +3,7 @@ package pw.simplyintricate.bitcoin.models.datastructures;
 import com.google.common.io.LittleEndianDataInputStream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
+import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
 
 import java.io.IOException;
 
@@ -51,6 +52,7 @@ public class TxOut {
         byte[] pkScript = new byte[pkScriptLengthInt];
 
         reader.read(pkScript, 0, pkScriptLengthInt);
+        pkScript = PrimitiveUtil.bigEndianToLittleEndian(pkScript);
 
         return new TxOut(value, pkScriptLength, pkScript);
     }

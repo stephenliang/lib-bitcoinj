@@ -4,6 +4,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
+import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
 
 import java.io.IOException;
 
@@ -76,6 +77,9 @@ public class Block {
         byte[] merkleRoot = new byte[32];
         reader.read(previousBlock, 0, 32);
         reader.read(merkleRoot, 0, 32);
+        previousBlock = PrimitiveUtil.bigEndianToLittleEndian(previousBlock);
+        merkleRoot = PrimitiveUtil.bigEndianToLittleEndian(merkleRoot);
+
         UnsignedInteger timestamp = UnsignedInteger.fromIntBits(reader.readInt());
         UnsignedInteger difficultyTarget = UnsignedInteger.fromIntBits(reader.readInt());
         UnsignedInteger nonce = UnsignedInteger.fromIntBits(reader.readInt());

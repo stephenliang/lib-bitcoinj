@@ -4,6 +4,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
+import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
 
 import java.io.IOException;
 
@@ -54,6 +55,7 @@ public class TxIn {
         int scriptLengthInt = scriptLength.getValue().intValue();
         byte[] signatureScript = new byte[scriptLengthInt];
         reader.read(signatureScript, 0, scriptLengthInt);
+        signatureScript = PrimitiveUtil.bigEndianToLittleEndian(signatureScript);
         int sequence = reader.readInt();
 
         return new TxIn(outPoint, scriptLength, signatureScript, UnsignedInteger.fromIntBits(sequence));
