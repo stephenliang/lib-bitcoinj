@@ -94,6 +94,38 @@ public class Block {
         return new Block(version, previousBlock, merkleRoot, timestamp, difficultyTarget, nonce, transactionCount, txes);
     }
 
+    public UnsignedInteger getVersion() {
+        return version;
+    }
+
+    public byte[] getPreviousBlock() {
+        return previousBlock;
+    }
+
+    public byte[] getMerkleRoot() {
+        return merkleRoot;
+    }
+
+    public UnsignedInteger getTimestamp() {
+        return timestamp;
+    }
+
+    public UnsignedInteger getDifficultyTarget() {
+        return difficultyTarget;
+    }
+
+    public UnsignedInteger getNonce() {
+        return nonce;
+    }
+
+    public VariableInteger getTransactionCount() {
+        return transactionCount;
+    }
+
+    public Tx[] getTransactions() {
+        return transactions;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
