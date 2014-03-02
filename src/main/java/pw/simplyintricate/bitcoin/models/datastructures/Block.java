@@ -134,8 +134,8 @@ public class Block {
 
     private void writeBlockHeader(HybridByteArrayDataOutput writer) {
         writer.writeInt(version.intValue());
-        writer.write(previousBlock);
-        writer.write(merkleRoot);
+        writer.write(PrimitiveUtil.reverseArray(previousBlock));
+        writer.write(PrimitiveUtil.reverseArray(merkleRoot));
         writer.writeInt(timestamp.intValue());
         writer.writeInt(difficultyTarget.intValue());
         writer.writeInt(nonce.intValue());
