@@ -4,6 +4,8 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.primitives.UnsignedInteger;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import pw.simplyintricate.bitcoin.io.HybridByteArrayDataOutput;
+import pw.simplyintricate.bitcoin.models.coins.CryptoCurrency;
+import pw.simplyintricate.bitcoin.util.CryptoUtil;
 import pw.simplyintricate.bitcoin.util.PrimitiveUtil;
 
 import java.io.IOException;
@@ -56,12 +58,7 @@ public class Block {
     public byte[] toByteArray() {
         HybridByteArrayDataOutput writer = new HybridByteArrayDataOutput();
 
-        writer.writeInt(version.intValue());
-        writer.write(previousBlock);
-        writer.write(merkleRoot);
-        writer.writeInt(timestamp.intValue());
-        writer.writeInt(difficultyTarget.intValue());
-        writer.writeInt(nonce.intValue());
+        writeBlockHeader(writer);
         writer.write(transactionCount.toByteArray());
 
         for (Tx tx: transactions) {
@@ -124,6 +121,26 @@ public class Block {
 
     public Tx[] getTransactions() {
         return transactions;
+    }
+
+    public String getHash(CryptoCurrency coin) {
+        HybridByteArrayDataOutput writer = new HybridByteArrayDataOutput();
+
+        writeBlockHeader(writer);
+
+        byte[] result = writer.toByteArray();
+        byte[] doubleHashedResult = CryptoUtil.doubleHash(result, coin.getEncryptionMethod());
+
+        return PrimitiveUtil.byteArrayToString(doubleHashedResult);
+    }
+
+    private void writeBlockHeader(HybridByteArrayDataOutput writer) {
+        writer.writeInt(version.intValue());
+        writer.write(previousBlock);
+        writer.write(merkleRoot);
+        writer.writeInt(timestamp.intValue());
+        writer.writeInt(difficultyTarget.intValue());
+        writer.writeInt(nonce.intValue());
     }
 
     @Override

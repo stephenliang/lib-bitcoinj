@@ -63,4 +63,17 @@ public class CryptoUtil {
 
         return random;
     }
+
+    public static byte[] doubleHash(byte[] payload, String encryptionMethod) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance(encryptionMethod);
+
+            byte[] firstRound = messageDigest.digest(payload);
+            byte[] secondRound = messageDigest.digest(firstRound);
+
+            return secondRound;
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException("Unknown encryption method", e);
+        }
+    }
 }
