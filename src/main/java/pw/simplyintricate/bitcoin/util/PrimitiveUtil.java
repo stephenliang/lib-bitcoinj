@@ -18,9 +18,9 @@
 
 package pw.simplyintricate.bitcoin.util;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class PrimitiveUtil {
     private static final int COMMAND_LENGTH = 12;
@@ -75,10 +75,7 @@ public class PrimitiveUtil {
     }
 
     public static byte[] bigEndianToLittleEndian(byte[] bytes) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.put(bytes);
-
-        return byteBuffer.array();
+        ArrayUtils.reverse(bytes);
+        return bytes;
     }
 }
